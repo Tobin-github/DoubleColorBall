@@ -6,3 +6,9 @@
 .DS_Store
 /build
 /captures
+.gitignore
+build.gradle
+libs/
+proguard-rules.pro
+src/
+src/main/res/drawable/
