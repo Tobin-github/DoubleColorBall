@@ -140,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_clear_number:
                 adpRedBall.clearData();
                 adpBlueBall.clearData();
+                txtShowRedBall.setText("");
+                txtShowBlueBall.setText("");
                 break;
             // 随机选号按钮
             case R.id.btn_random_select:
