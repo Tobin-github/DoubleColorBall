@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,10 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<String> arrRandomRed, arrRandomBlue;
 
     private Button btnRandomSelect, btnClearNumber, btnPurchaseBall;
-    private TextView txt_result,txtShowRedBall,txtShowBlueBall;
+    private TextView txtResult,txtShowRedBall,txtShowBlueBall;
 
-    private String strRedBall = "", strBlueBall = "";
-    private int selectHongNumber = 6, selectLanNumber = 1;
+    private int selectHongNumber = 0, selectLanNumber = 0;
 
     private ShakeListener mShakeListener = null;
     private Vibrator mVibrator;
@@ -38,32 +38,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
         // 对红球GridView进行监听，获得红球选中的数。
         gridViRedBall.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            Calculator calculatorDao = new Calculator();
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 在每次获取点击的item时将对应的checkbox状态改变，同时修改map的值。
-                redGridViewHolder vHollder = (redGridViewHolder) view.getTag();
-                vHollder.chkRed.toggle();
-                adpRedBall.getSelected().put(position, vHollder.chkRed.isChecked());
-                int temp = 0;
+                redGridViewHolder vHolder = (redGridViewHolder) view.getTag();
+                vHolder.chkRed.toggle();
+                adpRedBall.getSelected().put(position, vHolder.chkRed.isChecked());
+                int tempRed = 0;
+                String hq = "";
                 for (int i = 0; i < gridViRedBall.getCount(); i++) {
+                    redGridViewHolder vHolder_red = (redGridViewHolder) gridViRedBall.getChildAt(i).getTag();
                     if (adpRedBall.hisSelected.get(i)) {
-                        ++temp;
-                        selectHongNumber = temp;
-                        redGridViewHolder vHollder_hong = (redGridViewHolder) gridViRedBall.getChildAt(i).getTag();
-                        strRedBall = strRedBall + vHollder_hong.chkRed.getText() + "  ";
-
-                        vHollder_hong.chkRed.setTextColor(getResources().getColor(android.R.color.white));
+                        ++tempRed;
+                        selectHongNumber = tempRed;
+                        vHolder_red.chkRed.setTextColor(ContextCompat.getColor(MainActivity.this,android.R.color.white));
                     } else {
-                        RedBallAdapter.redGridViewHolder vHollder_hong = (RedBallAdapter.redGridViewHolder) gridViRedBall.getChildAt(i).getTag();
-                        vHollder_hong.chkRed.setTextColor(ContextCompat.getColor(MainActivity.this,android.R.color.black));
+                        vHolder_red.chkRed.setTextColor(ContextCompat.getColor(MainActivity.this,android.R.color.black));
+                    }
+                    if (adpRedBall.getSelected().get(i)){
+                        hq = hq + (i + 1) + "  ";
                     }
                 }
-                txtShowRedBall.setText(strRedBall);
-                strRedBall = "";
+                txtShowRedBall.setText(hq);
+
                 long zhushu = Calculator.calculateBetNum(selectHongNumber, selectLanNumber);
-                txt_result.setText("共" + String.valueOf(zhushu) + "注" + (zhushu * 2) + "元");
+                txtResult.setText("共" + String.valueOf(zhushu) + "注" + (zhushu * 2) + "元");
             }
         });
 
@@ -72,23 +73,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BlueBallAdapter.LanGridViewHolder vHollder = (BlueBallAdapter.LanGridViewHolder) view.getTag();
                 vHollder.chkBlue.toggle();
-                BlueBallAdapter.lisSelected.put(position, vHollder.chkBlue.isChecked());
-                int templan = 0;
+                adpBlueBall.getSelected().put(position, vHollder.chkBlue.isChecked());
+                int tempBlue = 0;
+                String lq = "";
                 for (int i = 0; i < gridViBlueBall.getCount(); i++) {
+                    BlueBallAdapter.LanGridViewHolder vHolder_Blue = (BlueBallAdapter.LanGridViewHolder) gridViBlueBall.getChildAt(i).getTag();
                     if (BlueBallAdapter.lisSelected.get(i)) {
-                        ++templan;
-                        selectLanNumber = templan;
-                        BlueBallAdapter.LanGridViewHolder vHollder_lan = (BlueBallAdapter.LanGridViewHolder) gridViBlueBall.getChildAt(i).getTag();
-                        strBlueBall = strBlueBall + vHollder_lan.chkBlue.getText() + "  ";
-                        vHollder_lan.chkBlue.setTextColor(getResources().getColor(android.R.color.white));
+                        ++tempBlue;
+                        selectLanNumber = tempBlue;
+                        vHolder_Blue.chkBlue.setTextColor(getResources().getColor(android.R.color.white));
                     } else {
-                        BlueBallAdapter.LanGridViewHolder vHollder_lan = (BlueBallAdapter.LanGridViewHolder) gridViBlueBall.getChildAt(i).getTag();
-                        vHollder_lan.chkBlue.setTextColor(getResources().getColor(android.R.color.black));
+                        vHolder_Blue.chkBlue.setTextColor(getResources().getColor(android.R.color.black));
+                    }
+
+                    if (adpBlueBall.getSelected().get(i)){
+                        lq = lq + (i + 1) + "  ";
                     }
                 }
-
+                txtShowBlueBall.setText(lq);
                 long zhushu = Calculator.calculateBetNum(selectHongNumber, selectLanNumber);
-                txt_result.setText("共" + String.valueOf(zhushu) + "注" + (zhushu * 2) + "元");
+                txtResult.setText("共" + String.valueOf(zhushu) + "注" + (zhushu * 2) + "元");
             }
         });
 
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_random_select:
                 randomSelect();
                 break;
-            // 投注按钮
+            // 投注确定按钮
             case R.id.btn_purchase_ball:
                 break;
             default:
@@ -156,19 +160,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adpRedBall.updateData(arrRandomRed);
         adpBlueBall.updateData(arrRandomBlue);
         String hq = "";
-        for (int i = 0; i < arrRandomRed.size(); i++) {
-            int temp = (Integer.parseInt(arrRandomRed.get(i)) + 1);
-            hq = hq + temp + "  ";
+        for (int i = 0; i < adpRedBall.getSelected().size(); i++) {
+            if (adpRedBall.getSelected().get(i)){
+                hq = hq + (i + 1) + "  ";
+            }
         }
         txtShowRedBall.setText(hq);
 
         String lq = "";
-        for (int i = 0; i < arrRandomBlue.size(); i++) {
-            int temp = (Integer.parseInt(arrRandomBlue.get(i)) + 1);
-            lq = lq + temp + "  ";
+        for (int i = 0; i < adpRedBall.getSelected().size(); i++) {
+            if (adpRedBall.getSelected().get(i)){
+                lq = lq + (i + 1) + "  ";
+            }
         }
         txtShowBlueBall.setText(lq);
-        txt_result.setText("共1注2元");
+
+        txtResult.setText("共1注2元");
     }
 
     private void init() {
@@ -182,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         txtShowRedBall = (TextView) findViewById(R.id.txt_showhongqiu);
         txtShowBlueBall = (TextView) findViewById(R.id.txt_showlanqiu);
-        txt_result = (TextView) findViewById(R.id.txt_result);
+        txtResult = (TextView) findViewById(R.id.txt_result);
 
         btnRandomSelect = (Button) findViewById(R.id.btn_random_select);
         btnClearNumber = (Button) findViewById(R.id.btn_clear_number);

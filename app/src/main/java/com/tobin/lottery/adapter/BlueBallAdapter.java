@@ -59,6 +59,10 @@ public class BlueBallAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public Map<Integer, Boolean> getSelected(){
+        return lisSelected;
+    }
+
     @Override
     public int getCount() {
         return arrBlueBall.size();
