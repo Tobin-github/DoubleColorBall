@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adpBlueBall.clearData();
                 txtShowRedBall.setText("");
                 txtShowBlueBall.setText("");
+                txtResult.setText("共0注0元");
                 break;
             // 随机选号按钮
             case R.id.btn_random_select:
