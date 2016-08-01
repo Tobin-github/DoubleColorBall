@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 定义震动
     public void startVibrato() {
-        mVibrator.vibrate(new long[] { 200, 500, 200, 500 }, -1);
-        // 第一个｛｝里面是节奏数组，
-        // 第二个参数是重复次数，-1为不重复，非-1则从pattern的指定下标开始重复
+        mVibrator.vibrate(new long[] { 200, 400, 0, 400 }, -1);
+        // 第一个｛｝里面是节奏数组，第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
+        // 第二个参数是重复次数，-1为不重复，0为一直震动，非-1则从pattern的指定下标开始重复
     }
 
     @Override
