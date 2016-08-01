@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnRandomSelect, btnClearNumber, btnPurchaseBall;
     private TextView txtResult,txtShowRedBall,txtShowBlueBall;
 
-    private int selectHongNumber = 0, selectLanNumber = 0;
+    private int selectHongNumber = 6, selectLanNumber = 1;
 
     private ShakeListener mShakeListener = null;
     private Vibrator mVibrator;
@@ -50,13 +51,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0; i < gridViRedBall.getCount(); i++) {
                     redGridViewHolder vHolder_red = (redGridViewHolder) gridViRedBall.getChildAt(i).getTag();
                     if (adpRedBall.hisSelected.get(i)) {
+
                         ++tempRed;
                         selectHongNumber = tempRed;
+                        Log.e("Tobin2","Red: " + (i+1) + "//selectHongNumber: " + selectHongNumber);
                         vHolder_red.chkRed.setTextColor(ContextCompat.getColor(MainActivity.this,android.R.color.white));
                     } else {
                         vHolder_red.chkRed.setTextColor(ContextCompat.getColor(MainActivity.this,android.R.color.black));
                     }
                     if (adpRedBall.getSelected().get(i)){
+                        Log.e("Tobin","Red: " + (i+1));
                         hq = hq + (i + 1) + "  ";
                     }
                 }
@@ -78,14 +82,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0; i < gridViBlueBall.getCount(); i++) {
                     BlueBallAdapter.LanGridViewHolder vHolder_Blue = (BlueBallAdapter.LanGridViewHolder) gridViBlueBall.getChildAt(i).getTag();
                     if (BlueBallAdapter.lisSelected.get(i)) {
+
                         ++tempBlue;
                         selectLanNumber = tempBlue;
+                        Log.e("Tobin2","Blue: " + (i+1) + "//selectLanNumber: " + selectLanNumber);
                         vHolder_Blue.chkBlue.setTextColor(getResources().getColor(android.R.color.white));
                     } else {
                         vHolder_Blue.chkBlue.setTextColor(getResources().getColor(android.R.color.black));
                     }
 
                     if (adpBlueBall.getSelected().get(i)){
+                        Log.e("Tobin","Blue: " + (i+1));
                         lq = lq + (i + 1) + "  ";
                     }
                 }
@@ -142,13 +149,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adpBlueBall.clearData();
                 txtShowRedBall.setText("");
                 txtShowBlueBall.setText("");
-                selectHongNumber = 0;
-                selectLanNumber = 0;
+                selectHongNumber = 6;
+                selectLanNumber = 1;
                 txtResult.setText("共0注0元");
                 break;
             // 随机选号按钮
             case R.id.btn_random_select:
                 randomSelect();
+                txtResult.setText("共1注2元");
                 break;
             // 投注确定按钮
             case R.id.btn_purchase_ball:
@@ -163,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getBallNumber();
         adpRedBall.updateData(arrRandomRed);
         adpBlueBall.updateData(arrRandomBlue);
-
+        selectHongNumber = 6;
+        selectLanNumber = 1;
         String hq = "";
         for (int i = 0; i < arrRandomRed.size(); i++) {
             hq = hq + (Integer.parseInt(arrRandomRed.get(i)) + 1) + "  ";
